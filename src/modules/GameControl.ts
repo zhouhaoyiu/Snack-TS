@@ -6,7 +6,7 @@ class GameControl {
   food: Food
   scorePanel: ScorePanel
   //存储移动方向
-  direction: string = ''
+  direction: string = 'Right'
   isLive = true
 
   constructor() {
@@ -48,9 +48,24 @@ class GameControl {
         X += 10
         break;
     }
-    this.snake.X = X
-    this.snake.Y = Y
+
+    if(this.checkEat(X,Y)){
+      this.food.change()
+      this.scorePanel.addScore()
+      this.snake.addBody()
+    }
+
+    try {
+      this.snake.X = X
+      this.snake.Y = Y
+    } catch (e) {
+      alert(e.message)
+      this.isLive = false
+    }
     setTimeout(this.run.bind(this), 300 - (this.scorePanel.level - 1) * 30);
+  }
+  checkEat(X: number, Y: number) {
+    return X === this.food.X && Y === this.food.Y
   }
 }
 
